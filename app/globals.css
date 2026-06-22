@@ -1,26 +1,105 @@
+/* Google Fonts Import Link (Add to your HTML <head> or let your framework handle it) */
+@import url("https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600&family=Caudex:wght@400;700&display=swap");
+
 @import "tailwindcss";
 
+/* ===========================================================
+   TAILWIND V4 THEME MAPPING
+=========================================================== */
+@theme {
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-primary-dark: var(--primary-dark);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-light: var(--secondary-light);
+  --color-secondary-dark: var(--secondary-dark);
+
+  --color-bg-main: var(--background);
+  --color-fg-main: var(--foreground);
+  --color-muted-main: var(--muted);
+  --color-muted-fg: var(--muted-foreground);
+
+  --radius-brand: var(--radius);
+
+  --font-serif: "Caudex", Georgia, serif;
+  --font-sans: "Assistant", sans-serif;
+}
+
+/* ===========================================================
+   ROOT VARIABLES
+=========================================================== */
 :root {
+  /* Brand Colors */
+  --primary: #6d3b01;
+  --primary-light: #8a4d09;
+  --primary-dark: #4d2800;
+
+  --secondary: #ffe3ba;
+  --secondary-light: #fff1db;
+  --secondary-dark: #f5d09a;
+
+  --white: #ffffff;
+
+  /* Neutral Colors */
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #1f2937;
+
+  --muted: #f8f8f8;
+  --muted-foreground: #6b7280;
+
+  --border: #ececec;
+  --input: #ececec;
+  --ring: #6d3b01;
+
+  --radius: 12px;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 10px rgb(0 0 0 / 0.08);
+  --shadow-lg: 0 12px 30px rgb(0 0 0 / 0.12);
+
+  --container-width: 1280px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --background: #111111;
+  --foreground: #f8f8f8;
+  --muted: #1c1c1c;
+  --muted-foreground: #cfcfcf;
+  --border: #2a2a2a;
+  --input: #2a2a2a;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ===========================================================
+   BASE RESET & TYPOGRAPHY
+=========================================================== */
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  font-weight: 300; /* Light assistant body */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-serif);
+  /* color: var(--primary); */
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+p {
+  line-height: 1.7;
 }
