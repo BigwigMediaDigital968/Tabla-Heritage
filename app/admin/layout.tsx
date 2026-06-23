@@ -1,23 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import {
   LayoutDashboard,
   Users,
   FileText,
   LogOut,
-  Menu,
   Shield,
-  Bell,
-  User,
-  ChevronDown,
   EyeOff,
   Eye,
+  ChevronRight,
+  User,
+  Bell
 } from "lucide-react";
 import { AdminProvider, useAdmin } from "@/context/AuthContext";
 
-// Local Sub-Component View for Static Login Guard Page
 function AdminLoginGate() {
   const { login } = useAdmin();
   const [username, setUsername] = useState("");
@@ -28,25 +26,25 @@ function AdminLoginGate() {
     e.preventDefault();
     if (username === "admin" && password === "TaalSadhana2026") {
       login("authenticated_secure_token");
-      toast.success("Login Successfull!");
+      toast.success("Welcome back, Admin!");
     } else {
-      alert("Invalid structural administrator keys.");
+      toast.error("Invalid administrator credentials.");
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#0c0c0b] flex items-center justify-center px-4 font-sans text-left">
-      <div className="w-full max-w-md bg-[#141312] rounded-3xl p-8 border border-neutral-800/80 shadow-2xl space-y-6">
+    <div className="min-h-screen bg-muted-main flex items-center justify-center px-4 font-sans text-left transition-colors duration-200">
+      <div className="w-full max-w-md bg-white rounded-brand p-8 border border-border shadow-md space-y-6">
         {/* Header Block */}
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 bg-[#c5a880]/10 border border-[#c5a880]/30 rounded-2xl flex items-center justify-center mx-auto text-[#c5a880]">
-            <Shield size={22} />
+          <div className="w-12 h-12 bg-[var(--secondary-light)] border border-[var(--secondary-dark)] rounded-xl flex items-center justify-center mx-auto text-[var(--primary)]">
+            <Shield size={22} className="stroke-[1.75]" />
           </div>
-          <h2 className="font-serif text-2xl font-bold text-white tracking-tight">
+          <h2 className="font-serif text-2xl font-bold text-[var(--primary)] tracking-tight">
             Tabla Heritage
           </h2>
-          <p className="text-xs text-neutral-400 font-light">
-            Protected administrator directory access channel
+          <p className="text-xs text-muted-fg font-light">
+            Protected administrator access terminal
           </p>
         </div>
 
@@ -54,7 +52,7 @@ function AdminLoginGate() {
         <form onSubmit={handleLogin} className="space-y-4">
           {/* Username Input */}
           <div className="space-y-1.5">
-            <label className="text-[16px] font-bold uppercase tracking-wider text-neutral-400">
+            <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-fg">
               Username
             </label>
             <input
@@ -62,29 +60,29 @@ function AdminLoginGate() {
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="admin"
-              className="w-full px-4 py-2.5 bg-[#1a1917] border border-neutral-800 focus:border-[#c5a880] rounded-xl text-md text-white focus:outline-none transition-colors"
+              placeholder="Enter your username"
+              className="w-full px-4 py-2.5 bg-bg-main border border-border focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] rounded-xl text-sm text-fg-main focus:outline-none transition-all placeholder:text-neutral-300"
             />
           </div>
 
-          {/* Master Passphrase Input with Hide/Show Action Toggle */}
+          {/* Master Passphrase Input */}
           <div className="space-y-1.5">
-            <label className="text-[16px] font-bold uppercase tracking-wider text-neutral-400">
+            <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-fg">
               Master Passphrase
             </label>
             <div className="relative w-full">
               <input
-                type={showPassword ? "text" : "password"} // Dynamic input type definition
+                type={showPassword ? "text" : "password"}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full pl-4 pr-12 py-2.5 bg-[#1a1917] border border-neutral-800 focus:border-[#c5a880] rounded-xl text-md text-white focus:outline-none transition-colors"
+                className="w-full pl-4 pr-12 py-2.5 bg-bg-main border border-border focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] rounded-xl text-sm text-fg-main focus:outline-none transition-all placeholder:text-neutral-300"
               />
               <button
-                type="button" // Critical to prevent implicit form triggers on click
+                type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-300 transition-colors focus:outline-none cursor-pointer"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-fg hover:text-fg-main transition-colors focus:outline-none cursor-pointer"
                 title={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -95,7 +93,7 @@ function AdminLoginGate() {
           {/* Submission Gate Control */}
           <button
             type="submit"
-            className="w-full py-3 bg-[#c5a880] hover:bg-[#b3956d] text-white font-semibold text-md rounded-xl tracking-wide transition-colors shadow-md cursor-pointer"
+            className="w-full py-3 bg-[var(--primary)] hover:bg-[var(--primary-light)] text-white font-medium text-sm rounded-xl tracking-wide transition-all shadow-sm hover:shadow-md cursor-pointer active:scale-[0.99]"
           >
             Authorize Connection
           </button>
@@ -105,72 +103,134 @@ function AdminLoginGate() {
   );
 }
 
-// Global Nav Shell Component
 function AdminShellLayout({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, logout } = useAdmin();
+  const [currentTab, setCurrentTab] = useState("dashboard");
+
+  // Dynamically parse out URL params on mount/navigation to visually update active tabs
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get("tab");
+      if (tab) {
+        setCurrentTab(tab);
+      } else if (window.location.pathname.includes("/blog")) {
+        setCurrentTab("blog");
+      }
+    }
+  }, []);
 
   if (!isAuthenticated) return <AdminLoginGate />;
 
+  // Dynamic Navigation Link Builder helper to keep active rules DRY
+  const renderNavLink = (href: string, id: string, label: string, Icon: React.ComponentType<{ size: number; className?: string }>, tag?: string) => {
+    const isActive = currentTab === id;
+    return (
+      <a
+        href={href}
+        className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all group cursor-pointer ${isActive
+            ? "bg-[var(--secondary-light)] text-[var(--primary)] font-semibold shadow-xs"
+            : "text-muted-fg hover:bg-muted-main hover:text-fg-main"
+          }`}
+      >
+        <Icon size={18} className={`transition-colors ${isActive ? "text-[var(--primary)]" : "text-neutral-400 group-hover:text-fg-main"}`} />
+        <span>{label}</span>
+        {tag && (
+          <span className={`ml-auto text-[9px] font-bold px-1.5 py-0.5 rounded transition-colors ${isActive ? "bg-[var(--secondary-dark)] text-[var(--primary)]" : "bg-muted-main text-muted-fg"
+            }`}>
+            {tag}
+          </span>
+        )}
+      </a>
+    );
+  };
+
+  // Humanizes current pathing tags for breadcrumb trail display
+  const getBreadcrumbLabel = () => {
+    if (currentTab === "dashboard") return "Data Overview";
+    if (currentTab === "leads") return "Leads Manager";
+    if (currentTab === "blog") return "Blogs Manager";
+    return "Overview";
+  };
+
   return (
-    <div className="min-h-screen bg-[#0c0c0b] text-neutral-200 font-sans flex text-left overflow-auto">
-      {/* 1. PERSISTENT SYSTEM SIDEBAR */}
-      <aside className="w-64 bg-[#141312] border-r border-neutral-800/80 flex flex-col justify-between p-5 shrink-0">
-        <div className="space-y-7">
-          <div className="flex items-center gap-3 px-2">
-            <div className="w-8 h-8 bg-[#c5a880] rounded-xl flex items-center justify-center text-white font-bold text-xl">
-              T
+    <>
+      <div className=" min-h-screen bg-muted-main text-fg-main font-sans flex text-left overflow-auto antialiased" data-lenis-prevent>
+        {/* 1. SIDEBAR NAVIGATION */}
+        <aside className="w-64 bg-white border-r border-border/80 flex flex-col justify-between p-5 shrink-0 shadow-xs">
+          <div className="space-y-6">
+            {/* Logo Brand Header Block */}
+            <div className="flex items-center gap-3 px-2 py-1.5 border-b border-neutral-100 pb-4">
+              <div className="w-9 h-9 bg-[var(--primary)] rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-sm">
+                T
+              </div>
+              <div>
+                <h3 className="font-serif text-lg font-bold text-[var(--primary)] tracking-wide leading-tight">
+                  Tabla Heritage
+                </h3>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--primary-light)]/80">
+                  Management System
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-serif text-xl font-bold text-white tracking-wide">
-                Tabla Heritage
-              </h3>
-              <p className="text-[16px] uppercase font-bold tracking-widest text-[#c5a880]">
-                Admin Panel
-              </p>
-            </div>
+
+            {/* Nav List */}
+            <nav className="space-y-1">
+              {renderNavLink("/admin?tab=dashboard", "dashboard", "Data Overview", LayoutDashboard)}
+              {renderNavLink("/admin?tab=leads", "leads", "Leads Manager", Users)}
+              {renderNavLink("/admin/blog", "blog", "Blogs Manager", FileText, "v2")}
+            </nav>
           </div>
 
-          <nav className="space-y-1">
-            <a
-              href="/admin?tab=dashboard"
-              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-md font-medium text-neutral-400 hover:bg-[#1a1917] hover:text-white transition-colors cursor-pointer"
-            >
-              <LayoutDashboard size={25} /> Data Overview
-            </a>
-            <a
-              href="/admin?tab=leads"
-              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-md font-medium text-neutral-400 hover:bg-[#1a1917] hover:text-white transition-colors cursor-pointer"
-            >
-              <Users size={25} /> Leads Manager
-            </a>
-            <a
-              href="/admin/blog"
-              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-md font-medium text-neutral-400 hover:bg-[#1a1917] hover:text-white transition-colors cursor-pointer"
-            >
-              <FileText size={25} /> Blogs Manager{" "}
-              <span className="ml-auto text-[8px] px-1.5 py-0.5 bg-neutral-800 rounded text-neutral-400">
-                v2
-              </span>
-            </a>
-          </nav>
+          {/* System Outbound Escape Gate */}
+          <button
+            onClick={logout}
+            className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-all border border-transparent hover:border-red-100 cursor-pointer group"
+          >
+            <LogOut size={18} className="text-red-400 group-hover:text-red-600 transition-colors" />
+            <span>Logout System</span>
+          </button>
+        </aside>
+
+        {/* 2. MAIN CORE APPLICATION WINDOW */}
+        <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
+          {/* TOP CONTEXT BAR */}
+          <header className="h-16 bg-white border-b border-border/80 flex items-center justify-between px-8 shrink-0 shadow-2xs">
+            {/* Internal System Breadcrumbs Mapping */}
+            <div className="flex items-center gap-2 text-xs font-medium text-muted-fg">
+              <span>Console</span>
+              <ChevronRight size={14} className="text-neutral-300" />
+              <span className="text-[var(--primary)] font-semibold">{getBreadcrumbLabel()}</span>
+            </div>
+
+            {/* Right Action Stack */}
+            <div className="flex items-center gap-4">
+              <button className="p-1.5 rounded-lg text-muted-fg hover:bg-muted-main hover:text-fg-main transition-colors relative cursor-pointer">
+                <Bell size={18} />
+                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full"></span>
+              </button>
+              <div className="h-4 w-px bg-neutral-200"></div>
+              <div className="flex items-center gap-2.5 pl-1">
+                <div className="w-8 h-8 bg-[var(--secondary-light)] border border-[var(--secondary-dark)] text-[var(--primary)] font-bold text-xs rounded-full flex items-center justify-center">
+                  <User size={14} />
+                </div>
+                <div className="hidden md:block">
+                  <p className="text-xs font-semibold text-fg-main leading-none">System Admin</p>
+                  <p className="text-[10px] text-muted-fg mt-0.5">Primary Session</p>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          {/* INTERCHANGEABLE ACTIVE CONTENT COMPONENT CONTAINER */}
+          <main className="flex-1 bg-muted-main overflow-auto">
+            <div className="max-w-(--container-width) mx-auto p-4 h-full">
+              {children}
+            </div>
+          </main>
         </div>
-
-        <button
-          onClick={logout}
-          className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xl font-medium text-rose-400 hover:bg-rose-950/20 transition-colors border border-transparent hover:border-rose-900/20 cursor-pointer"
-        >
-          <LogOut size={30} /> Logout
-        </button>
-      </aside>
-
-      {/* 2. FLEXIBLE MAIN APPLICATION WINDOW */}
-      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
-        {/* COMPONENT BODY ATTACHMENT EXECUTOR */}
-        <main className="flex-1 overflow-y-auto p-8 bg-[#0c0c0b]">
-          {children}
-        </main>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -186,11 +246,12 @@ export default function AdminRootLayout({
         position="bottom-center"
         toastOptions={{
           style: {
-            background: "#141312",
-            color: "#fff",
-            borderRadius: "12px",
-            border: "1px solid #262524",
+            background: "#ffffff",
+            color: "#1f2937",
+            borderRadius: "var(--radius-brand)",
+            border: "1px solid var(--border)",
             fontSize: "13px",
+            boxShadow: "var(--shadow-md)",
           },
         }}
       />

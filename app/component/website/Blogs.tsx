@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Eye, Calendar, User, ArrowRight } from "lucide-react";
+import { formatDate } from "@/app/lib/date";
 
 interface BlogPost {
   id: string;
@@ -55,6 +56,23 @@ const staticBlogs: BlogPost[] = [
 ];
 
 export default function Blogs() {
+  const [blogs, setBlogs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    fetchBlogsLedger();
+  }, []);
+
+  const fetchBlogsLedger = async () => {
+    try {
+      const res = await fetch("/api/blog?admin=true&status=all");
+      const resData = await res.json();
+      if (resData.success) setBlogs(resData.data);
+    } catch (err) {
+      console.error("Could not load tracking logs:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <section className="py-10 sm:py-20 dark:bg-[#111111] bg-[#ffe3ba] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -78,7 +96,7 @@ export default function Blogs() {
           Desktop (lg): transitions cleanly into an explicit 4-column structural grid.
         */}
         <div className="flex lg:grid lg:grid-cols-4 gap-6 sm:gap-8 overflow-x-auto lg:overflow-x-visible snap-x snap-mandatory scrollbar-none pb-6 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0">
-          {staticBlogs.map((blog, idx) => (
+          {[...(staticBlogs)].map((blog, idx) => (
             <motion.a
               key={blog.id}
               href={`/blogs/${blog.slug}`}
@@ -105,13 +123,13 @@ export default function Blogs() {
                 <div className="p-5 space-y-4">
                   {/* Metadata Indicators Row */}
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 font-sans text-xs text-muted-fg font-light border-b border-neutral-100 dark:border-neutral-800/80 pb-3">
-                    <div className="flex items-center gap-1">
+                    {/* <div className="flex items-center gap-1">
                       <User size={13} className="text-primary-light/70" />
                       <span>{blog.author}</span>
-                    </div>
+                    </div> */}
                     <div className="flex items-center gap-1">
                       <Calendar size={13} className="text-primary-light/70" />
-                      <span>{blog.publishedDate}</span>
+                      {/* <span>{formatDate(blog.updatedAt)}</span> */}
                     </div>
                     <div className="flex items-center gap-1 ml-auto lg:ml-0">
                       <Eye size={13} className="text-primary-light/70" />

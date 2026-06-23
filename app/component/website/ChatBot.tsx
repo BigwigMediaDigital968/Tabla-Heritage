@@ -12,6 +12,7 @@ import {
   Phone,
   FileText,
 } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 interface ChatForm {
   firstName: string;
@@ -21,6 +22,7 @@ interface ChatForm {
 }
 
 export default function ChatBot() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState<"initialQuery" | "contactForm" | "success">(
     "initialQuery",
@@ -89,6 +91,9 @@ export default function ChatBot() {
     setStep("initialQuery");
     setIsOpen(false);
   };
+
+  if(pathname.includes("/admin"))
+    return null;
 
   return (
     <div className="fixed bottom-6 right-6 z-50 font-sans text-left">

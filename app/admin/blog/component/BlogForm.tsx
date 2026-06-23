@@ -1,6 +1,6 @@
 "use client";
 
-import TextEditor from "@/app/component/admin/TextEditor";
+import BlogEditor from "@/app/component/admin/BlogEditor";
 
 interface FAQItem {
   question: string;
@@ -27,5 +27,6 @@ interface BlogFormProps {
 export default function BlogForm({ initialData }: BlogFormProps) {
   // Pass the initialData directly down into the consolidated text editor
   // The editor now handles tabs for general fields, visual wysiwyg, raw html code, seo, and faqs.
-  return <TextEditor initialData={initialData} />;
+  console.log("initialData", initialData)
+  return <BlogEditor initialData={initialData} />;
 }
