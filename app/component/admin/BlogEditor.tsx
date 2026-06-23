@@ -17,6 +17,7 @@ import {
   RichTextEditor,
   RichTextEditorHandle,
 } from "@/app/admin/blog/component/Richtexteditor";
+import Link from "next/link";
 
 interface FAQItem {
   question: string;
@@ -367,13 +368,13 @@ export default function BlogEditor({ initialData }: TextEditorProps) {
     <div className="font-sans text-left text-[var(--foreground)]">
       <div className="w-full mx-auto space-y-6">
         {/* Breadcrumb */}
-        <button
+        <Link
           type="button"
-          onClick={() => router.push("/admin/blogs")}
+          href={"/admin/blog"}
           className="flex items-center gap-2 text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors cursor-pointer"
         >
           <ArrowLeft size={14} /> Back to Blogs
-        </button>
+        </Link>
 
         <div className="border-b border-[var(--border)] pb-5">
           <h1 className="font-serif text-2xl font-bold tracking-tight text-[var(--foreground)]">

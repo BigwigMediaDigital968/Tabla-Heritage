@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import BlogDetail from "../component/BlogDetail";
 import Navbar from "@/app/component/website/Navbar";
@@ -10,30 +10,36 @@ type Props = {
 };
 
 // ── Shared Cached Server Data Access ─────────────────────────────────────
-export const getBlogBySlug = cache(
-  async (slug: string): Promise<any | null> => {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SITE_URL}/api/blog/${slug}`,
-        {
-          next: { revalidate: 300 },
-        }
-      );
+export const getBlogBySlug = cache(async (slug: string) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_SITE_URL}/api/blog/${slug}`,
+      {
+        next: { revalidate: 300 },
+      }
+    );
 
-      if (!res.ok) return null;
-      const data = await res.json();
-      return data.data;
-    } catch (error) {
-      console.error("Failed to fetch blog:", error);
-      return null;
-    }
+    const data = await res.json();
+
+    return {
+      status: res.status,
+      ...data,
+    };
+  } catch (error) {
+    console.error("Failed to fetch blog:", error);
+
+    return {
+      success: false,
+      notFound: true,
+    };
   }
-);
+});
 
 // ── Next.js Dynamic SEO Generation ───────────────────────────────────────
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const blog = await getBlogBySlug(slug);
+  const result = await getBlogBySlug(slug);
+  const blog = result.data;
 
   if (!blog) {
     return { title: "Article not found" };
@@ -58,11 +64,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogDetailPage({ params }: Props) {
   const { slug } = await params;
-  const blog = await getBlogBySlug(slug);
+  const result = await getBlogBySlug(slug);
 
-  if (!blog) {
+  // Handle 404
+  if (!result?.success || result.notFound) {
     notFound();
   }
+
+  // Handle old slug redirect
+  if (result.redirected) {
+    redirect(`/blog/${result.redirectTo}`);
+  }
+
+  const blog = result.data;
 
   // Generate structured SEO objects on the server
   const articleJsonLd = {
@@ -79,39 +93,39 @@ export default async function BlogDetailPage({ params }: Props) {
   const faqJsonLd =
     blog.faqs?.length > 0
       ? {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: blog.faqs.map((faq: any) => ({
-            "@type": "Question",
-            name: faq.question,
-            acceptedAnswer: { "@type": "Answer", text: faq.answer },
-          })),
-        }
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: blog.faqs.map((faq: any) => ({
+          "@type": "Question",
+          name: faq.question,
+          acceptedAnswer: { "@type": "Answer", text: faq.answer },
+        })),
+      }
       : null;
 
   return (
     <>
-          <Navbar />
+      <Navbar />
 
-    <article>
-      {/* Structural JSON-LD injection fields */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
-      />
-      {faqJsonLd && (
+      <article>
+        {/* Structural JSON-LD injection fields */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
         />
-      )}
+        {faqJsonLd && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+          />
+        )}
 
-      {/* Render Interface view components safely on Client runtime layers */}
-      <BlogDetail blog={blog} />
-    </article>
-          <Footer />
-    
-</>
+        {/* Render Interface view components safely on Client runtime layers */}
+        <BlogDetail blog={blog} />
+      </article>
+      <Footer />
+
+    </>
 
   );
 }

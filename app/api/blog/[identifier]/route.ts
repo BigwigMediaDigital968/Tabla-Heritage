@@ -25,6 +25,32 @@ export async function GET(
     }
 
     if (!blog) {
+      const redirectedBlog = await Blog.findOne({
+        "slugHistory.oldSlug": identifier,
+      });
+
+      if (redirectedBlog) {
+        return NextResponse.json({
+          success: true,
+          redirected: true,
+          redirectTo: redirectedBlog.slug,
+        });
+      }
+    }
+
+    // Nothing found
+    if (!blog) {
+      return NextResponse.json(
+        {
+          success: false,
+          notFound: true,
+          message: "Blog not found",
+        },
+        { status: 404 }
+      );
+    }
+
+    if (!blog) {
       return NextResponse.json(
         {
           success: false,
