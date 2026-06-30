@@ -21,7 +21,7 @@ const servicesData: ServiceItem[] = [
       "Traditional compositions are taught to students as well as accompaniment for various genres of music and classical dance.",
     image: "/assets/tabla-lesson.png", // Replace with your image asset path
     icon: <Music4 className="w-5 h-5 text-primary" />,
-    tag: "Classical Classical Training",
+    tag: "Classical Training",
   },
   {
     id: "dholak-lessons",
@@ -52,7 +52,7 @@ export default function Service() {
            ========================================== */}
         <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-20 space-y-3">
           <span className="font-sans text-xs font-bold uppercase tracking-[0.25em] text-primary-light block">
-            Our Offerings
+            Our Programs
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-primary font-serif">
             Nurturing Rhythm, Shaping Artistry

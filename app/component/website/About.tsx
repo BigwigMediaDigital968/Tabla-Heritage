@@ -84,26 +84,29 @@ export default function About() {
               <p>
                 <strong className="font-semibold text-primary">
                   TABLA HERITAGE
-                </strong>
-                , formerly known as <em>The Tabla Dhyaan</em>, is a premier
-                institution dedicated to the sublime art of tabla and dholak
-                lessons within the Greater Toronto Area. We cater to students of
-                all ages and skill levels, offering comprehensive training and
-                education in these traditional Indian percussion instruments.
+                </strong>{" "}
+                is a premier institution dedicated to preserving and advancing
+                the tradition of Hindustani Classical Tabla in the Greater
+                Toronto Area. We provide structured training for students of all
+                ages and skill levels, emphasizing authentic learning rooted in
+                the guru-shishya parampara.
               </p>
               <p>
-                Our school specializes in the intensive study, training, and
-                deep research of tabla, fostering a profound understanding and
-                structural appreciation for this rich cultural heritage. Over
-                the years, our students have actively contributed to numerous
-                charitable events and vibrant cultural programs, showcasing
-                their talents and beautifully enriching the community.
+                Our curriculum focuses on traditional compositions, systematic
+                riyaz techniques, layakari, taal theory, and solo performance.
+                Students develop a strong foundation through disciplined
+                practice, gaining both technical excellence and a deep
+                understanding of the artistic and cultural heritage of
+                Hindustani classical music.
               </p>
               <p>
-                Taal Sadhana remains deeply committed to promoting and nurturing
-                exceptionally skilled stage performers who selflessly share
-                their artistry at Mandir events, cultural shows, weddings,
-                birthdays, and other soulful sangeet celebrations.
+                Beyond regular training, TABLA HERITAGE encourages students to
+                apply their learning through classical recitals, lecture
+                demonstrations, cultural performances, and collaborative musical
+                presentations. Our mission is to nurture confident,
+                knowledgeable, and performance-ready tabla artists who uphold
+                the rich legacy of the instrument while carrying its tradition
+                forward with dedication and excellence.
               </p>
             </div>
 

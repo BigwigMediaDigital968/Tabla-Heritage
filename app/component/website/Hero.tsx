@@ -36,7 +36,7 @@ export default function Hero() {
           <div className="flex items-center justify-center md:justify-end gap-2 text-white">
             <Music size={14} className="animate-pulse" />
             <span className="font-sans text-xs font-semibold uppercase tracking-[0.2em]">
-              Varanasi & Benaras Gharana Lineage
+              Delhi & Punjab Gharana Lineage
             </span>
           </div>
 
@@ -50,9 +50,9 @@ export default function Hero() {
 
           {/* Project Content Description */}
           <p className="font-sans font-light text-sm sm:text-base md:text-lg text-white/90 max-w-lg mx-auto md:mr-0 leading-relaxed drop-shadow-xs">
-            Discover traditional compositions, classical dance accompaniment,
-            and vibrant folk rhythms under the expert guidance of seasoned
-            maestro lineage.
+            Build excellence through traditional compositions, structured riyaz
+            techniques, layakari mastery, and confident solo performance under
+            authentic guru-guided training.
           </p>
 
           {/* Interactive Action Button linking directly to /contact */}
